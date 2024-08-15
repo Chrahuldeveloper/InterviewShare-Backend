@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const interviewSchema = require("./Interview");
+const blogSchema = require("./Blogs");
 const User = new mongoose.Schema({
   Name: {
     type: String,
@@ -14,8 +15,8 @@ const User = new mongoose.Schema({
     required: true,
   },
   interviews: [interviewSchema],
+  blogs: [blogSchema],
 });
 
 const users = mongoose.model("users", User);
-
 module.exports = users;
