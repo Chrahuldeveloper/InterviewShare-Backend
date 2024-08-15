@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 const PORT = 9000;
-const { signUpRoute } = require("./src/routes/index");
+const { signUpRoute, blogUploadRoute } = require("./src/routes/index");
 app.use(express.json());
 
 app.use(cors());
 
 app.use("/signup", signUpRoute);
+app.use("/blog", blogUploadRoute);
 const startServer = async () => {
   console.log(`Server Started at http://localhost:${PORT}`);
 };

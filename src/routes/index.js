@@ -1,3 +1,4 @@
-const signUpRoute = require('./SignUp.js');
+const signUpRoute = require("./SignUp.js");
+const blogUploadRoute = require("./UploadBlog.js");
 
-module.exports = { signUpRoute }
+module.exports = { signUpRoute, blogUploadRoute };
