@@ -6,17 +6,12 @@ blogUploadRoute.post("/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
     const { blog } = req.body;
-
     const user = await users.findById(jwt);
-
     if (!user) {
       return res.status(404).send("User not found");
     }
-
     user.blogs.push(blog);
-
     await user.save();
-
     res.status(200).send("Blog uploaded successfully");
   } catch (error) {
     console.log(error);
