@@ -1,13 +1,13 @@
 const express = require("express");
 const interviewUploadRoute = express.Router();
-const User = require("./User");
+const users = require("../models/User");
 
 interviewUploadRoute.post("/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
     const { interview } = req.body;
 
-    const user = await User.findById(jwt);
+    const user = await users.findById(jwt);
 
     if (!user) {
       return res.status(404).send("User not found");
@@ -15,7 +15,7 @@ interviewUploadRoute.post("/:jwt", async (req, res) => {
 
     user.interviews.push(interview);
 
-    await user.save();
+    await users.save();
 
     res.status(200).send("Interview experience uploaded successfully");
   } catch (error) {
@@ -28,7 +28,7 @@ interviewUploadRoute.get("/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
 
-    const user = await User.findById(jwt);
+    const user = await users.findById(jwt);
 
     if (!user) {
       return res.status(404).send("User not found");
