@@ -1,15 +1,15 @@
 const express = require("express");
-const voteInterviewsRoute = express.Router();
+const LikeInterviewsRoute = express.Router();
 const users = require("../models/User");
 
-voteInterviewsRoute.post("/interviews/:userId/:interviewId/upvote", async (req, res) => {
+LikeInterviewsRoute.post("/interviews/:userId/:interviewId/like", async (req, res) => {
   try {
     const { userId, interviewId } = req.params;
 
     const user = await users.findOneAndUpdate(
       { _id: userId, "interviews._id": interviewId }, 
-      { $inc: { "interviews.$.upvotes": 1 } },       
-      { new: true }                                  
+      { $inc: { "interviews.$.Likes": 1 } },        
+      { new: true }                               
     );
 
     if (!user) {
@@ -24,4 +24,4 @@ voteInterviewsRoute.post("/interviews/:userId/:interviewId/upvote", async (req, 
   }
 });
 
-module.exports = voteInterviewsRoute;
+module.exports = LikeInterviewsRoute;
