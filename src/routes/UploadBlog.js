@@ -2,16 +2,26 @@ const express = require("express");
 const blogUploadRoute = express.Router();
 const users = require("../models/User");
 
-blogUploadRoute.post("/:jwt", async (req, res) => {
+blogUploadRoute.post("/blog/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
-    const { blog } = req.body;
+    const { title, img, sections, comments = [] } = req.body;
+
     const user = await users.findById(jwt);
     if (!user) {
       return res.status(404).send("User not found");
     }
-    user.blogs.push(blog);
+
+    const newBlog = {
+      title,
+      img,
+      sections,
+      comments,
+    };
+
+    user.blogs.push(newBlog);
     await user.save();
+
     res.status(200).send("Blog uploaded successfully");
   } catch (error) {
     console.log(error);
@@ -19,7 +29,7 @@ blogUploadRoute.post("/:jwt", async (req, res) => {
   }
 });
 
-blogUploadRoute.get("/:jwt", async (req, res) => {
+blogUploadRoute.get("/blog/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
 
@@ -28,11 +38,80 @@ blogUploadRoute.get("/:jwt", async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     res.status(200).json(user.blogs);
   } catch (error) {
     console.log(error);
     res.status(500).send("Server error");
   }
 });
+
+blogUploadRoute.post("/blog/:jwt/:blogId/comment", async (req, res) => {
+  try {
+    const { jwt, blogId } = req.params;
+    const { comment } = req.body;
+
+    const user = await users.findById(jwt);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const blog = user.blogs.id(blogId);
+    if (!blog) {
+      return res.status(404).send("Blog not found");
+    }
+
+    const newComment = { comment, repliedAt: null };
+    blog.comments.push(newComment);
+
+    await user.save();
+
+    res.status(200).send("Comment added successfully");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+});
+
+blogUploadRoute.post(
+  "/blog/:jwt/:blogId/comment/:commentId/reply",
+  async (req, res) => {
+    try {
+      const { jwt, blogId, commentId } = req.params;
+      const { reply } = req.body;
+
+      const user = await users.findById(jwt);
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      const blog = user.blogs.id(blogId);
+      if (!blog) {
+        return res.status(404).send("Blog not found");
+      }
+
+      const comment = blog.comments.id(commentId);
+      if (!comment) {
+        return res.status(404).send("Comment not found");
+      }
+
+      if (user._id.toString() !== jwt) {
+        return res
+          .status(403)
+          .send("You are not authorized to reply to this comment");
+      }
+
+      comment.reply = reply;
+      comment.repliedAt = new Date();
+
+      await user.save();
+
+      res.status(200).send("Reply added successfully");
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Server error");
+    }
+  }
+);
 
 module.exports = blogUploadRoute;

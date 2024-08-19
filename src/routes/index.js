@@ -8,4 +8,5 @@ module.exports = {
   blogUploadRoute,
   getTrendingInterViewsRoute,
   voteInterViewsRoute,
+
 };

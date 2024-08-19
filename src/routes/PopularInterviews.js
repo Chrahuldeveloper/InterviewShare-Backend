@@ -18,7 +18,6 @@ popularInterviewsRoute.get("/interviews/popular", async (req, res) => {
         },
       },
     ]);
-
     res.status(200).json(popularInterviews);
   } catch (error) {
     console.error(error);
