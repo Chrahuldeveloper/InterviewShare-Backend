@@ -13,9 +13,22 @@ getTrendingInterViewsRoute.get("/interviews/trending", async (req, res) => {
           _id: 0,
           "interviews._id": 1,
           "interviews.company": 1,
+          "interviews.companyPic": 1, 
           "interviews.position": 1,
           "interviews.experience": 1,
+          "interviews.date": 1, 
+          "interviews.Name": 1,
+          "interviews.selected": 1,
+          "interviews.Level": 1,
+          "interviews.rounds": 1,
+          "interviews.CGPA": 1,
+          "interviews.NumberofProblems": 1,
+          "interviews.ProfilePic": 1,
+          "interviews.interviewPlace": 1,
+          "interviews.collage": 1, 
+          "interviews.Likes": 1,
           "interviews.upvotes": 1,
+
         },
       },
     ]);
@@ -75,6 +88,7 @@ getTrendingInterViewsRoute.post("/experience/:jwt", async (req, res) => {
 
     user.interviews.push(newExperience);
     await user.save();
+    res.send("done")
   } catch (error) {
     console.log(error);
   }
