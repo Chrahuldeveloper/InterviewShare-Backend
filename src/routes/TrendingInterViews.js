@@ -1,7 +1,8 @@
 const express = require("express");
 const getTrendingInterViewsRoute = express.Router();
 const users = require("../models/User");
-getTrendingInterViewsRoute.get("/interviews/trending", async () => {
+
+getTrendingInterViewsRoute.get("/interviews/trending", async (req, res) => {
   try {
     const trendingInterviews = await users.aggregate([
       { $unwind: "$interviews" },
@@ -20,6 +21,60 @@ getTrendingInterViewsRoute.get("/interviews/trending", async () => {
     ]);
 
     res.status(200).json(trendingInterviews.map((item) => item.interviews));
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+});
+
+getTrendingInterViewsRoute.post("/experience/:jwt", async (req, res) => {
+  try {
+    const { jwt } = req.params;
+    const {
+      company,
+      companyPic,
+      position,
+      experience,
+      date,
+      Name,
+      selected,
+      Level,
+      rounds,
+      CGPA,
+      NumberofProblems,
+      ProfilePic,
+      interviewPlace,
+      collage,
+      Likes = 0,
+      upvotes = 0,
+    } = req.body;
+
+    const user = await users.findById(jwt);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const newExperience = {
+      company,
+      companyPic,
+      position,
+      experience,
+      date,
+      Name,
+      selected,
+      Level,
+      rounds,
+      CGPA,
+      NumberofProblems,
+      ProfilePic,
+      interviewPlace,
+      collage,
+      Likes,
+      upvotes,
+    };
+
+    user.interviews.push(newExperience);
+    await user.save();
   } catch (error) {
     console.log(error);
   }
