@@ -2,6 +2,7 @@ const express = require("express");
 const getTrendingInterViewsRoute = express.Router();
 const users = require("../models/User");
 const mongoose = require("mongoose");
+
 getTrendingInterViewsRoute.get("/interviews/trending", async (req, res) => {
   try {
     const trendingInterviews = await users.aggregate([
@@ -28,6 +29,11 @@ getTrendingInterViewsRoute.get("/interviews/trending", async (req, res) => {
           "interviews.collage": 1,
           "interviews.Likes": 1,
           "interviews.upvotes": 1,
+          "interviews.upvotedBy": 1,
+          "interviews.applicationStory": 1,
+          "interviews.selectionReason": 1,
+          "interviews.preparation": 1,
+          "interviews.tip": 1,
         },
       },
     ]);
@@ -59,6 +65,11 @@ getTrendingInterViewsRoute.post("/experience/:jwt", async (req, res) => {
       collage,
       Likes = 0,
       upvotes = 0,
+      upvotedBy = [],
+      applicationStory,
+      selectionReason,
+      preparation,
+      tip,
     } = req.body;
 
     const user = await users.findById(jwt);
@@ -83,13 +94,18 @@ getTrendingInterViewsRoute.post("/experience/:jwt", async (req, res) => {
       collage,
       Likes,
       upvotes,
+      upvotedBy,
+      applicationStory,
+      selectionReason,
+      preparation,
+      tip,
     };
-
     user.interviews.push(newExperience);
     await user.save();
     res.send("done");
   } catch (error) {
     console.log(error);
+    res.status(500).send("Server error");
   }
 });
 
@@ -99,7 +115,9 @@ getTrendingInterViewsRoute.get("/interviews/:interviewId", async (req, res) => {
 
     const interview = await users.aggregate([
       { $unwind: "$interviews" },
-      { $match: { "interviews._id": new mongoose.Types.ObjectId(interviewId) } },
+      {
+        $match: { "interviews._id": new mongoose.Types.ObjectId(interviewId) },
+      },
       {
         $project: {
           _id: 0,
@@ -120,6 +138,11 @@ getTrendingInterViewsRoute.get("/interviews/:interviewId", async (req, res) => {
           "interviews.collage": 1,
           "interviews.Likes": 1,
           "interviews.upvotes": 1,
+          "interviews.upvotedBy": 1,
+          "interviews.applicationStory": 1,
+          "interviews.selectionReason": 1,
+          "interviews.preparation": 1,
+          "interviews.tip": 1,
         },
       },
     ]);

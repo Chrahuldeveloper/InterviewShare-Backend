@@ -17,6 +17,11 @@ const interviewSchema = new mongoose.Schema({
   collage: { type: String, required: true },
   Likes: { type: Number, required: true },
   upvotes: { type: Number, required: true },
+  upvotedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "users" }],
+  applicationStory: { type: String, required: true },
+  selectionReason: { type: String, required: true },
+  preparation: { type: String, required: true },
+  tip: { type: String, required: true },
 });
 
 module.exports = interviewSchema;

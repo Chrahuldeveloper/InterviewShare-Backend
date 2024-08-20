@@ -6,22 +6,31 @@ voteInterviewsRoute.post("/interviews/:userId/:interviewId/upvote", async (req, 
   try {
     const { userId, interviewId } = req.params;
 
-    const user = await users.findOneAndUpdate(
-      { _id: userId, "interviews._id": interviewId }, 
-      { $inc: { "interviews.$.upvotes": 1 } },       
-      { new: true }                                  
-    );
-
+    const user = await users.findById(userId);
     if (!user) {
-      return res.status(404).send("User or Interview not found");
+      return res.status(404).send("User not found");
     }
 
-    const updatedInterview = user.interviews.id(interviewId);
-    res.status(200).json(updatedInterview);
+    const interview = user.interviews.id(interviewId);
+    if (!interview) {
+      return res.status(404).send("Interview not found");
+    }
+
+    if (interview.upvotedBy.includes(userId)) {
+      return res.status(400).send("You have already upvoted this interview");
+    }
+
+    interview.upvotes += 1;
+    interview.upvotedBy.push(userId);
+
+    await user.save();
+
+    res.status(200).json(interview);
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
   }
 });
+
 
 module.exports = voteInterviewsRoute;
