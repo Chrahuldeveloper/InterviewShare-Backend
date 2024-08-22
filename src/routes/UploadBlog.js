@@ -1,11 +1,21 @@
 const express = require("express");
 const blogUploadRoute = express.Router();
 const users = require("../models/User");
+const mongoose = require("mongoose");
 
 blogUploadRoute.post("/blog/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
+
+    console.log(jwt);
+
+    if (!mongoose.Types.ObjectId.isValid(jwt)) {
+      return res.status(400).send("Invalid User ID");
+    }
+
     const { title, img, sections, comments = [] } = req.body;
+
+    console.log(title, img, sections);
 
     const user = await users.findById(jwt);
     if (!user) {
@@ -23,6 +33,22 @@ blogUploadRoute.post("/blog/:jwt", async (req, res) => {
     await user.save();
 
     res.status(200).send("Blog uploaded successfully");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+});
+
+blogUploadRoute.get("/blog/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await users.findOne({ "blogs._id": id }, { "blogs.$": 1 });
+
+    if (!user || !user.blogs.length) {
+      return res.status(404).send("Blog not found");
+    }
+
+    res.status(200).json({ blog: user.blogs[0] });
   } catch (error) {
     console.log(error);
     res.status(500).send("Server error");
@@ -67,6 +93,17 @@ blogUploadRoute.post("/blog/:jwt/:blogId/comment", async (req, res) => {
     await user.save();
 
     res.status(200).send("Comment added successfully");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Server error");
+  }
+});
+
+blogUploadRoute.get("/blogs", async (req, res) => {
+  try {
+    const usersWithBlogs = await users.find({}).select("blogs");
+    const allBlogs = usersWithBlogs.flatMap((user) => user.blogs);
+    res.status(200).json(allBlogs);
   } catch (error) {
     console.log(error);
     res.status(500).send("Server error");
