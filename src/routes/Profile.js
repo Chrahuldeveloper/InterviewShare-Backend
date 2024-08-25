@@ -38,7 +38,7 @@ userprofileRoute.get("/user/update/:userjwt", async (req, res) => {
       return res.status(400).send("Invalid User ID");
     }
 
-    const user = await users.findById(userjwt).select("Name ProfilePic bio");
+    const user = await users.findById(userjwt).select("name profilepic bio");
     if (!user) {
       return res.status(404).send("User not found");
     }
