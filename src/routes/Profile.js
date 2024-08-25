@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 userprofileRoute.post("/user/update/:userjwt", async (req, res) => {
   try {
     const { userjwt } = req.params;
-    const { Name, bio, profilePic } = req.body;
+    const { name, bio, profilepic } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(userjwt)) {
       return res.status(400).send("Invalid User ID");
@@ -17,9 +17,9 @@ userprofileRoute.post("/user/update/:userjwt", async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    if (Name) user.Name = Name;
+    if (name) user.name = name;
     if (bio) user.bio = bio;
-    if (profilePic) user.ProfilePic = profilePic;
+    if (profilepic) user.profilepic = profilepic;
 
     await user.save();
 
@@ -44,8 +44,8 @@ userprofileRoute.get("/user/update/:userjwt", async (req, res) => {
     }
 
     res.status(200).json({
-      Name: user.Name,
-      profilePic: user.ProfilePic,
+      name: user.name,
+      profilepic: user.profilepic,
       bio: user.bio,
     });
   } catch (error) {
@@ -57,7 +57,8 @@ userprofileRoute.get("/user/update/:userjwt", async (req, res) => {
 userprofileRoute.put("/user/update/:userjwt", async (req, res) => {
   try {
     const { userjwt } = req.params;
-    const { Name, bio, profilePic } = req.body;
+
+    const { name, bio, profilepic } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(userjwt)) {
       return res.status(400).send("Invalid User ID");
@@ -70,16 +71,16 @@ userprofileRoute.put("/user/update/:userjwt", async (req, res) => {
 
     if (name) user.Name = name;
     if (bio) user.bio = bio;
-    if (profilePic) user.ProfilePic = profilePic;
+    if (profilepic) user.profilepic = profilepic;
 
     await user.save();
 
     res.status(200).json({
       message: "Profile updated successfully",
       user: {
-        Name: user.Name,
+        name: user.name,
         bio: user.bio,
-        profilePic: user.ProfilePic,
+        profilepic: user.profilepic,
       },
     });
   } catch (error) {

@@ -13,7 +13,7 @@ profileRouter.get("/:userId", async (req, res) => {
     }
 
     res.json({
-      Name: user.Name,
+      name: user.name,
       blogs: user.blogs,
       interviews: user.interviews,
     });

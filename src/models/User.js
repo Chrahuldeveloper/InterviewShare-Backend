@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const interviewSchema = require("./Interview");
 const blogSchema = require("./Blogs");
 const User = new mongoose.Schema({
-  Name: {
+  name: {
     type: String,
     required: true,
   },
@@ -17,7 +17,7 @@ const User = new mongoose.Schema({
   interviews: [interviewSchema],
   blogs: [blogSchema],
   bio: { type: String },
-  ProfilePic: { type: String },
+  profilepic: { type: String },
 });
 
 const users = mongoose.model("users", User);
