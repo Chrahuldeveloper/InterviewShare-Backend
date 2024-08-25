@@ -16,6 +16,8 @@ const User = new mongoose.Schema({
   },
   interviews: [interviewSchema],
   blogs: [blogSchema],
+  bio: { type: String },
+  ProfilePic: { type: String },
 });
 
 const users = mongoose.model("users", User);
