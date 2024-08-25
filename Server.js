@@ -9,6 +9,7 @@ const {
   getTrendingInterViewsRoute,
   voteInterViewsRoute,
   profileRouter,
+  userprofileRoute,
 } = require("./src/routes/index");
 
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use("/", blogUploadRoute);
 app.use("/", getTrendingInterViewsRoute);
 app.use("/", voteInterViewsRoute);
 app.use("/", profileRouter);
+app.use("/", userprofileRoute);
 const startServer = async () => {
   console.log(`Server Started at http://localhost:${PORT}`);
 };
