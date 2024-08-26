@@ -12,9 +12,9 @@ popularInterviewsRoute.get("/interviews/popular", async (req, res) => {
           _id: 0,
           "interviews._id": 1,
           "interviews.company": 1,
-          "interviews.position": 1,
-          "interviews.experience": 1,
-          "interviews.Likes": 1,
+          "interviews.role": 1,
+          "interviews.location": 1,
+          "interviews.upvotes": 1,
         },
       },
     ]);
