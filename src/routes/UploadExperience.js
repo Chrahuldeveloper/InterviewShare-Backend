@@ -2,7 +2,7 @@ const express = require("express");
 const interviewUploadRoute = express.Router();
 const users = require("../models/User");
 
-interviewUploadRoute.post("/:jwt", async (req, res) => {
+interviewUploadRoute.post("interviewUpload/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
     const { interview } = req.body;
@@ -24,7 +24,7 @@ interviewUploadRoute.post("/:jwt", async (req, res) => {
   }
 });
 
-interviewUploadRoute.get("/:jwt", async (req, res) => {
+interviewUploadRoute.get("interviewUpload/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
 
