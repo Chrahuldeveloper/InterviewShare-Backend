@@ -2,20 +2,24 @@ const express = require("express");
 const interviewUploadRoute = express.Router();
 const users = require("../models/User");
 
-interviewUploadRoute.post("interviewUpload/:jwt", async (req, res) => {
+interviewUploadRoute.post("/upload/interviewUpload/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
     const { interview } = req.body;
 
-    const user = await users.findById(jwt);
+    if (!jwt) {
+      return res.status(400).send("JWT is required");
+    }
 
+    const user = await users.findById(jwt);
     if (!user) {
       return res.status(404).send("User not found");
     }
-
     user.interviews.push(interview);
+    console.log(interview);
+    console.log(user);
 
-    await users.save();
+    await user.save();
 
     res.status(200).send("Interview experience uploaded successfully");
   } catch (error) {
@@ -24,9 +28,13 @@ interviewUploadRoute.post("interviewUpload/:jwt", async (req, res) => {
   }
 });
 
-interviewUploadRoute.get("interviewUpload/:jwt", async (req, res) => {
+interviewUploadRoute.get("/upload/interviewUpload/:jwt", async (req, res) => {
   try {
     const { jwt } = req.params;
+
+    if (!jwt) {
+      return res.status(400).send("JWT is required");
+    }
 
     const user = await users.findById(jwt);
 
