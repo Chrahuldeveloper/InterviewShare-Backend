@@ -15,7 +15,7 @@ blogUploadRoute.post("/blog/:jwt", async (req, res) => {
 
     const { title, img, sections, comments = [] } = req.body;
 
-    console.log(title, img, sections);
+    console.log(title, img, sections, comments);
 
     const user = await users.findById(jwt);
     if (!user) {

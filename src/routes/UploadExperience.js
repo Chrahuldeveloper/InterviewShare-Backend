@@ -7,6 +7,8 @@ interviewUploadRoute.post("/upload/interviewUpload/:jwt", async (req, res) => {
     const { jwt } = req.params;
     const { interview } = req.body;
 
+    console.log(interview)
+
     if (!jwt) {
       return res.status(400).send("JWT is required");
     }

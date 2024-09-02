@@ -1,9 +1,10 @@
 const express = require("express");
 const signUpRoute = express.Router();
-const users = require("../models/User")
+const users = require("../models/User");
 signUpRoute.post("/", async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    console.log(name, email, password);
     const isExists = await users.findOne({ email: email });
     if (isExists) {
       return res.status(400).send("User already exists");
